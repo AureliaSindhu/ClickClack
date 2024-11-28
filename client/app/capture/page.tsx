@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import Webcam from "react-webcam";
 import { useRouter } from "next/navigation";
+import '../style.css';
 
 export default function CapturePage() {
     const webcamRef = useRef<Webcam>(null);
@@ -30,9 +31,9 @@ export default function CapturePage() {
     
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <h1 className="text-2xl font-bold mb-4">Capture Your Photos</h1>
-        <div className="w-80 h-80 bg-black rounded-lg overflow-hidden mb-4">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-[var(--canvas)]">
+        <h1 className="text-2xl font-bold mb-4 text-[var(--charcoal)]">Capture Your Photos</h1>
+        <div className="w-80 h-80 bg-[var(--charcoal)] rounded-lg overflow-hidden mb-4">
             <Webcam
             audio={false}
             ref={webcamRef}
