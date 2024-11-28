@@ -11,6 +11,9 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        charcoal: "var(--charcoal)",
+        canvas: "var(--canvas)",
+        slate: "var(--slate)",
       },
     },
   },

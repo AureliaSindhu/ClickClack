@@ -12,15 +12,17 @@ import {
     WhatsappIcon,
 } from "react-share";
 
+interface Frame {
+    id: string;
+    type: "color" | "custom";
+    src: string; // URL of the frame image or color code
+    name: string;
+}
+
 export default function FinalizePage() {
     const router = useRouter();
     const [photos, setPhotos] = useState<string[]>([]);
-    const [selectedFrame, setSelectedFrame] = useState<{
-        id: string;
-        type: "color" | "custom";
-        src: string;
-        name: string;
-    } | null>(null);
+    const [selectedFrame, setSelectedFrame] = useState<Frame | null>(null);
     const [finalImage, setFinalImage] = useState<string>("");
 
     const finalRef = useRef<HTMLDivElement>(null);
@@ -93,17 +95,28 @@ export default function FinalizePage() {
                 ref={finalRef}
                 className="relative flex flex-col items-center justify-center mb-8 bg-white"
                 style={{
-                    width:
-                        selectedFrame?.type === "color"
-                            ? `${photos.length > 0 ? photos[0].length : 400}px`
-                            : "420px", // Adjust based on frame type
-                    padding: "10px",
-                    borderTop:
-                        selectedFrame?.type === "color" ? `10px solid ${selectedFrame.src}` : "none",
-                    borderBottom:
-                        selectedFrame?.type === "color" ? `10px solid ${selectedFrame.src}` : "none",
+                    width: "400px",
+                    height: "340px", // 320px photo grid + 10px top + 10px bottom borders
+                    backgroundColor: selectedFrame?.type === "color" ? "transparent" : "transparent",
+                    padding: selectedFrame?.type === "color" ? "0px" : "0px", // No padding needed since borders are separate
                 }}
             >
+                {/* Top Border */}
+                {selectedFrame?.type === "color" && (
+                    <div
+                        className="absolute top-0 left-0 w-full"
+                        style={{ height: "10px", backgroundColor: selectedFrame.src }}
+                    ></div>
+                )}
+
+                {/* Bottom Border */}
+                {selectedFrame?.type === "color" && (
+                    <div
+                        className="absolute bottom-0 left-0 w-full"
+                        style={{ height: "10px", backgroundColor: selectedFrame.src }}
+                    ></div>
+                )}
+
                 {/* Custom Frame Overlay */}
                 {selectedFrame?.type === "custom" && (
                     <img
@@ -120,8 +133,8 @@ export default function FinalizePage() {
                     style={{
                         width: "320px", // 160px * 2
                         height: "320px", // 160px * 2
-                        paddingTop: selectedFrame?.type === "color" ? "10px" : "0",
-                        paddingBottom: selectedFrame?.type === "color" ? "10px" : "0",
+                        marginTop: selectedFrame?.type === "color" ? "10px" : "0",
+                        marginBottom: selectedFrame?.type === "color" ? "10px" : "0",
                     }}
                 >
                     {photos.map((photo, index) => (
@@ -129,7 +142,7 @@ export default function FinalizePage() {
                             key={index}
                             src={photo}
                             alt={`Photo ${index + 1}`}
-                            className="w-40 h-40 object-cover rounded-md"
+                            className="object-cover rounded-md"
                             style={{ width: "160px", height: "160px" }}
                         />
                     ))}
@@ -140,7 +153,15 @@ export default function FinalizePage() {
             {finalImage && (
                 <div className="flex flex-col items-center mb-6">
                     <h2 className="text-xl font-semibold mb-2">Your Final Image:</h2>
-                    <img src={finalImage} alt="Final Image" className="w-80 h-80 object-cover rounded-md mb-4" />
+                    <img 
+                        src={finalImage} 
+                        alt="Final Image" 
+                        className="w-100 h-100 object-contain rounded-md mb-4" // Tailwind doesn't have w-100 and h-100 by default
+                        style={{
+                            width: "400px",
+                            height: "340px",
+                        }}
+                    />
                 </div>
             )}
 
